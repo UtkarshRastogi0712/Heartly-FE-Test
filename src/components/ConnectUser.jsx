@@ -50,7 +50,6 @@ function ConnectUser({ socket }) {
   const handleJoin = async () => {
     console.log(username);
     if (username.trim()) {
-      socket.emit("join", { username });
       setJoined(true);
       await getUserMediaStream();
     } else {
@@ -59,9 +58,9 @@ function ConnectUser({ socket }) {
   };
 
   const handleReciver = () => {
-    console.log(reciever, username);
+    console.log(reciever);
     if (reciever.trim()) {
-      socket.emit("request-call", { reciever, username });
+      socket.emit("request-call", { reciever });
     } else {
       alert("Please enter reciver name");
     }
@@ -69,7 +68,6 @@ function ConnectUser({ socket }) {
 
   const handleCall = async (caller, roomId) => {
     socket.emit("call-accepted", {
-      username,
       caller,
       roomId,
       peerId: myPeerId,
@@ -85,7 +83,7 @@ function ConnectUser({ socket }) {
     if (confirm(`You have a call request from ${caller}`) == true) {
       handleCall(caller, roomId);
     } else {
-      socket.emit("call-denied", { username, caller, roomId });
+      socket.emit("call-denied", { caller, roomId });
     }
   }
   function onCallDenied({ username }) {
